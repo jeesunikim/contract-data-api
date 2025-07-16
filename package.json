@@ -1,0 +1,14 @@
+{
+  "name": "stellar-lab-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:jeesunikim/stellar-lab-api.git",
+  "author": "<3912060+jeesunikim@users.noreply.github.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.12.0"
+  }
+}
