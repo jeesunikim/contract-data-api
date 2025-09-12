@@ -1,19 +1,16 @@
 const express = require("express");
-const { PrismaClient } = require("../generated/prisma");
+const { connect } = require("./utils/connect.cjs");
+const contractRoutes = require("./routes/contract_data");
 
 const app = express();
-const prisma = new PrismaClient();
-const PORT = process.env.PORT || 3000;
 
-async function main() {
-  // ... you will write your Prisma Client queries here
-  const transactions = await prisma.transactions.findMany();
-  console.log(transactions);
-}
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.use("/api", contractRoutes);
+
+app.get("/", (_req, res) => {
   res.json({ message: "Stellar Lab API is running!" });
 });
 
@@ -21,18 +18,14 @@ app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}`);
 
   try {
-    await prisma.$connect();
+    const { prisma } = await connect();
 
-    main()
-      .then(async () => {
-        await prisma.$disconnect();
-      })
-      .catch(async (e) => {
-        console.error(e);
-        await prisma.$disconnect();
-        process.exit(1);
-      });
+    const results =
+      await prisma.$queryRaw`SELECT * FROM "public"."contract_data" LIMIT 5`;
 
+    // use ORM to filter
+    // Don't write raw query everytime. Use ORM
+    console.log("Available columns:", results);
     console.log("Connected to PostgreSQL database");
   } catch (error) {
     console.error("Failed to connect to database:", error);
