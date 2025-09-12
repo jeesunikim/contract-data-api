@@ -31,23 +31,6 @@ model gorp_migrations {
   applied_at DateTime? @db.Timestamptz(6)
 }
 
-model transaction {
-  id                 String?
-  ledger_sequence    Int
-  transaction_hash   String   @id
-  closed_at          DateTime @db.Timestamptz(6)
-  tx_envelope        String
-  tx_result          String
-  tx_meta            String
-  tx_fee_meta        String
-  successful         Boolean
-  diagnostic_events  String
-  transaction_events String
-  contract_events    String
-
-  @@index([transaction_hash], map: "idx_transaction_hash")
-}
-
 /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model ttl {
   key_hash                   String?

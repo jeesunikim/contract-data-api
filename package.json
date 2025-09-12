@@ -5,6 +5,13 @@
   "repository": "git@github.com:jeesunikim/stellar-lab-api.git",
   "author": "<3912060+jeesunikim@users.noreply.github.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch src/index.js",
+    "prisma:generate": "npx prisma generate",
+    "migrate": "npx prisma migrate dev",
+    "prisma:studio": "npx prisma studio"
+  },
   "dependencies": {
     "@google-cloud/cloud-sql-connector": "^1.8.3",
     "@prisma/client": "^6.13.0",
