@@ -3,8 +3,8 @@ node_modules
 .env
 creds.json
 
+/dist
 /generated/prisma
 /db
-/dist
 
 .DS_Store
