@@ -9,7 +9,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model contract_data {
   id              String?
   ledger_sequence Int
@@ -19,11 +18,11 @@ model contract_data {
   key             Bytes?
   val             Bytes?
   closed_at       DateTime @db.Timestamptz(6)
+  pk_id           BigInt   @id @default(autoincrement())
 
   @@index([id], map: "idx_contract_id")
   @@index([key_decoded], map: "idx_key_decoded")
   @@index([key_hash], map: "idx_key_hash")
-  @@ignore
 }
 
 model gorp_migrations {
@@ -37,6 +36,7 @@ model ttl {
   ledger_sequence            Int
   live_until_ledger_sequence Int
   closed_at                  DateTime @db.Timestamptz(6)
+  pk_id                      BigInt   @id @default(autoincrement())
 
   @@ignore
 }

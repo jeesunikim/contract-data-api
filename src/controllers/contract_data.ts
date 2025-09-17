@@ -1,8 +1,9 @@
-const { PrismaClient } = require("../../generated/prisma");
+import { Request, Response } from "express";
+import { PrismaClient } from "../../generated/prisma";
 
 const prisma = new PrismaClient();
 
-const getKeysByContractId = async (req, res) => {
+export const getKeysByContractId = async (req: Request, res: Response): Promise<void> => {
   try {
     const { contract_id } = req.params;
 
@@ -17,8 +18,4 @@ const getKeysByContractId = async (req, res) => {
     console.error("Error fetching transaction:", error);
     res.status(500).json({ error: "Internal server error" });
   }
-};
-
-module.exports = {
-  getKeysByContractId,
 };
