@@ -1,4 +1,5 @@
 import express from "express";
+
 import { connect } from "./utils/connect";
 import contractRoutes from "./routes/contract_data";
 
@@ -41,25 +42,18 @@ app.listen(PORT, async () => {
     console.log("Available tables:", tables);
 
     // Try to get count of contract_data records
-    const count = await prisma.$queryRaw`SELECT COUNT(*) FROM "public"."contract_data"`;
+    const count =
+      await prisma.$queryRaw`SELECT COUNT(*) FROM "public"."contract_data"`;
     console.log("Total contract_data records:", count);
 
     // Try using Prisma ORM method
     try {
       const contractData = await prisma.contract_data.findMany({
-        take: 5
+        take: 5,
       });
       console.log("Contract data (ORM):", contractData);
     } catch (error) {
       console.log("ORM method failed:", error);
-    }
-
-    // Also try raw query with better error handling
-    try {
-      const rawRows = await prisma.$queryRaw`SELECT * FROM "public"."contract_data" LIMIT 5`;
-      console.log("Raw query result:", rawRows);
-    } catch (error) {
-      console.log("Raw query failed:", error);
     }
 
     console.log("Connected to PostgreSQL database");

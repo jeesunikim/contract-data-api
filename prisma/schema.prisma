@@ -1,7 +1,7 @@
 generator client {
   provider        = "prisma-client-js"
   output          = "../generated/prisma"
-  previewFeatures = ["typedSql"]
+  previewFeatures = ["relationJoins", "typedSql"]
 }
 
 datasource db {
@@ -19,7 +19,9 @@ model contract_data {
   val             Bytes?
   closed_at       DateTime @db.Timestamptz(6)
   pk_id           BigInt   @id @default(autoincrement())
+  ttl             ttl?     @relation(fields: [key_hash, ledger_sequence], references: [key_hash, ledger_sequence])
 
+  @@index([id, closed_at(sort: Desc)], map: "idx_contract_data_id_closedat")
   @@index([id], map: "idx_contract_id")
   @@index([key_decoded], map: "idx_key_decoded")
   @@index([key_hash], map: "idx_key_hash")
@@ -30,13 +32,30 @@ model gorp_migrations {
   applied_at DateTime? @db.Timestamptz(6)
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model transaction {
+  id                 String?
+  ledger_sequence    Int
+  transaction_hash   String   @id
+  closed_at          DateTime @db.Timestamptz(6)
+  tx_envelope        String
+  tx_result          String
+  tx_meta            String
+  tx_fee_meta        String
+  successful         Boolean
+  diagnostic_events  String
+  transaction_events String
+  contract_events    String
+
+  @@index([transaction_hash], map: "idx_transaction_hash")
+}
+
 model ttl {
   key_hash                   String?
   ledger_sequence            Int
   live_until_ledger_sequence Int
   closed_at                  DateTime @db.Timestamptz(6)
   pk_id                      BigInt   @id @default(autoincrement())
+  contract_data              contract_data[]
 
-  @@ignore
+  @@unique([key_hash, ledger_sequence])
 }
