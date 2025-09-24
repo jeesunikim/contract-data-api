@@ -18,7 +18,8 @@
   "dependencies": {
     "@google-cloud/cloud-sql-connector": "^1.8.3",
     "@prisma/client": "^6.13.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "zod": "^4.1.9"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",

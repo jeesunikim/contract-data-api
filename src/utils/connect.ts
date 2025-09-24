@@ -22,11 +22,6 @@ import {
 } from "@google-cloud/cloud-sql-connector";
 import { PrismaClient } from "../../generated/prisma";
 
-console.log(
-  "Using credentials file:",
-  process.env.GOOGLE_APPLICATION_CREDENTIALS
-);
-
 async function cleanupSocket() {
   const socketPath = path.join(process.cwd(), ".s.PGSQL.5432");
   try {
@@ -54,11 +49,6 @@ async function connect({
   // Cleanup before starting
   await cleanupSocket();
 
-  console.log(
-    "📁 Using credentials file:",
-    process.env.GOOGLE_APPLICATION_CREDENTIALS
-  );
-
   await connector.startLocalProxy({
     instanceConnectionName,
     ipType: IpAddressTypes.PUBLIC,
@@ -66,11 +56,8 @@ async function connect({
     listenOptions: { path: socketPath },
   });
 
-  // const user = JSON.parse(
-  //   process.env.GOOGLE_APPLICATION_CREDENTIALS
-  // ).client_email;
-
   const datasourceUrl = `postgresql://${user}@localhost/${database}?host=${process.cwd()}`;
+
   const prisma = new PrismaClient({ datasourceUrl });
 
   // Return PrismaClient and close() function
