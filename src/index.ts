@@ -42,9 +42,8 @@ app.listen(PORT, async () => {
     console.log("Available tables:", tables);
 
     // Try to get count of contract_data records
-    const count =
-      await prisma.$queryRaw`SELECT COUNT(*) FROM "public"."contract_data"`;
-    console.log("Total contract_data records:", count);
+    // const count =
+    //   await prisma.$queryRaw`SELECT COUNT(*) FROM "public"."contract_data"`;
 
     // Try using Prisma ORM method
     try {
