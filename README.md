@@ -8,6 +8,13 @@ A Node.js REST API for managing contract data using Express.js and Prisma ORM wi
 - Yarn package manager
 - PostgreSQL database
 
+## Technology Stack
+
+- Framework: Express.js 5.1.0
+- Database: PostgreSQL with Prisma ORM 6.12.0
+- Language: TypeScript
+- Package Manager: Yarn
+
 ## Setup
 
 ### 1. **Install dependencies**
@@ -25,6 +32,10 @@ yarn install
 
 ### 3. Database Setup
 
+#### Introspect your database with Prisma ORM
+
+`npx prisma db pull`
+
 #### Generate Prisma client
 
 `npx prisma generate`
@@ -35,7 +46,7 @@ yarn install
 
 ### 4. Start the API
 
-`node src/index.js`
+`yarn dev`
 
 #### Database Commands
 
@@ -45,10 +56,17 @@ yarn install
 
 #### API Endpoints
 
-- GET /contract-data - Retrieve contract data
+- GET /api/mainnet/contract/CDVQVKOY2YSXS2IC7KN6MNASSHPAO7UN2UR2ON4OI2SKMFJNVAMDX6DP/storage - Retrieve contract data
 
-Project Structure
+`curl http://localhost:3000/api/{network}/contract/{contract_id}/storage`
 
+- ?sort_by=durability&order=desc - Sort by durability descending
+- ?sort_by=ttl&order=asc - Sort by TTL ascending
+- ?sort_by=updated_at&order=desc - Sort by updated timestamp descending
+
+#### Project Structure
+
+```
 src/
 ├── controllers/ # Route handlers
 ├── routes/ # API routes
@@ -58,10 +76,4 @@ src/
 prisma/
 ├── schema.prisma # Database schema
 └── migrations/ # Database migrations
-
-Technology Stack
-
-- Framework: Express.js 5.1.0
-- Database: PostgreSQL with Prisma ORM 6.12.0
-- Language: TypeScript
-- Package Manager: Yarn
+```
