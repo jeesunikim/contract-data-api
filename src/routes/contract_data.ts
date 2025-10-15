@@ -1,9 +1,9 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, Router } from "express";
 import { z } from "zod";
 
 import { getContractDataByContractId } from "../controllers/contract_data";
 
-const router = express.Router();
+const router: Router = express.Router();
 
 const storageQuery = z.object({
   limit: z.coerce.number().int().min(1).max(200).default(10),
