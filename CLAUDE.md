@@ -4,16 +4,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-This project uses Yarn as the package manager:
+This project uses pnpm as the package manager:
 
-- **Install dependencies**: `yarn install`
-- **Development**: No dev script defined in package.json - check if there's an index.js entry point or if scripts need to be added
+- **Install dependencies**: `pnpm install`
+- **Development**:
+  - `pnpm dev` - Run development server with nodemon
+  - `pnpm dev:watch` - Run with file watching
+  - `pnpm build` - Build TypeScript to JavaScript
+  - `pnpm start` - Run production server
+  - `pnpm typecheck` - Run TypeScript type checking
 - **Database operations**:
-  - Generate Prisma client: `npx prisma generate`
-  - Run migrations: `npx prisma migrate dev`
+  - Generate Prisma client: `pnpm prisma:generate` or `npx prisma generate`
+  - Run migrations: `pnpm migrate` or `npx prisma migrate dev`
   - Deploy migrations: `npx prisma migrate deploy`
   - Reset database: `npx prisma migrate reset`
-  - View database: `npx prisma studio`
+  - View database: `pnpm prisma:studio` or `npx prisma studio`
 
 ## Architecture Overview
 
@@ -23,7 +28,7 @@ This is a Node.js API project using Express.js and Prisma ORM with the following
 
 - **Framework**: Express.js 5.1.0
 - **Database ORM**: Prisma 6.12.0 with PostgreSQL
-- **Package Manager**: Yarn (lockfile present)
+- **Package Manager**: pnpm (lockfile present)
 
 ### Directory Structure
 
@@ -59,7 +64,7 @@ Database comes from Google Cloud SQL via 'cloud-sql-connector'.
 ### Development Workflow
 
 1. Ensure `DATABASE_URL` environment variable is set
-2. Run `yarn install` to install dependencies
-3. Run `npx prisma generate` to generate the Prisma client
-4. Create or run database migrations with `npx prisma migrate dev` (doc)[https://www.prisma.io/docs/orm/prisma-migrate/understanding-prisma-migrate/mental-model#track-your-migration-history-with-prisma-migrate-dev]
-5. The main application entry point needs to be created (likely `src/index.js` or `src/app.js`)
+2. Run `pnpm install` to install dependencies
+3. Run `pnpm prisma:generate` to generate the Prisma client
+4. Create or run database migrations with `pnpm migrate` ([documentation](https://www.prisma.io/docs/orm/prisma-migrate/understanding-prisma-migrate/mental-model#track-your-migration-history-with-prisma-migrate-dev))
+5. Start development server with `pnpm dev`
