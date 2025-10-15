@@ -22,6 +22,9 @@ import {
 } from "@google-cloud/cloud-sql-connector";
 import { PrismaClient } from "../../generated/prisma";
 
+// Export a shared Prisma instance that will be set during initialization
+export let prisma: PrismaClient;
+
 async function cleanupSocket() {
   const socketPath = path.join(process.cwd(), ".s.PGSQL.5432");
   try {
@@ -58,7 +61,7 @@ async function connect({
 
   const datasourceUrl = `postgresql://${user}@localhost/${database}?host=${process.cwd()}`;
 
-  const prisma = new PrismaClient({ datasourceUrl });
+  prisma = new PrismaClient({ datasourceUrl });
 
   // Return PrismaClient and close() function
   return {
