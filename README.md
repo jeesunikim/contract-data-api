@@ -5,7 +5,7 @@ A Node.js REST API for managing contract data using Express.js and Prisma ORM wi
 ## Prerequisites
 
 - Node.js (v16 or higher)
-- Yarn package manager
+- pnpm package manager
 - PostgreSQL database
 
 ## Technology Stack
@@ -13,22 +13,63 @@ A Node.js REST API for managing contract data using Express.js and Prisma ORM wi
 - Framework: Express.js 5.1.0
 - Database: PostgreSQL with Prisma ORM 6.12.0
 - Language: TypeScript
-- Package Manager: Yarn
+- Package Manager: pnpm
 
 ## Setup
 
 ### 1. **Install dependencies**
 
 ```bash
-yarn install
-
+pnpm install
 ```
 
 ### 2. Environment Configuration
 
-#### Create .env file with your database connection
+#### Copy .env.example to .env file with your credentials
 
-`DATABASE_URL="postgresql://username:password@localhost:5432/contract_data"`
+**Important Notes:**
+
+- This API uses **IAM authentication** via Google Cloud SQL Connector for database connections in the application controllers
+- `DATABASE_URL` is **not directly used** by the application controllers but is **required by Prisma CLI tools** for:
+  - Running migrations (`pnpm migrate`)
+  - Using Prisma Studio (`pnpm prisma:studio`)
+  - Database introspection (`npx prisma db pull`)
+
+**Two options for using Prisma CLI tools:**
+
+#### Option 1: Cloud SQL Proxy with IAM Auth (Recommended)
+
+Use the Cloud SQL Auth Proxy to connect with IAM authentication:
+
+1. **Download the Cloud SQL Proxy** from [Google Cloud](https://cloud.google.com/sql/docs/mysql/sql-proxy)
+
+2. **Run the proxy with IAM authentication:**
+
+   ```bash
+   ./cloud-sql-proxy --auto-iam-authn <INSTANCE_CONNECTION_NAME>
+   ```
+
+3. **Set your DATABASE_URL to use the proxy:**
+
+   ```bash
+   DATABASE_URL="postgresql://<YOUR_IAM_EMAIL>@localhost:5432/<DATABASE_NAME>?host=/cloudsql/<INSTANCE_CONNECTION_NAME>"
+   ```
+
+4. **Run Prisma commands:**
+   ```bash
+   npx prisma db pull
+   pnpm prisma:studio
+   ```
+
+#### Option 2: Direct Connection with Username/Password
+
+Contact the data team to get your IP address allowlisted for direct database access:
+
+```bash
+DATABASE_URL="postgresql://username:password@localhost:5432/contract_data"
+```
+
+This option is useful for Prisma Studio and running migrations locally.
 
 ### 3. Database Setup
 
@@ -38,25 +79,48 @@ yarn install
 
 #### Generate Prisma client
 
-`npx prisma generate`
+```bash
+pnpm prisma:generate
+# or
+npx prisma generate
+```
 
 #### Run database migrations
 
-`npx prisma migrate dev`
+```bash
+pnpm migrate
+# or
+npx prisma migrate dev
+```
 
 ### 4. Start the API
 
-`yarn dev`
+```bash
+pnpm dev
+```
 
-#### Database Commands
+## Available Scripts
 
-- View database: npx prisma studio
-- Reset database: npx prisma migrate reset
-- Deploy migrations: npx prisma migrate deploy
+- `pnpm dev` - Run development server with nodemon
+- `pnpm dev:watch` - Run development server with file watching
+- `pnpm build` - Build TypeScript to JavaScript
+- `pnpm start` - Run production server
+- `pnpm typecheck` - Run TypeScript type checking
+- `pnpm prisma:generate` - Generate Prisma client
+- `pnpm migrate` - Run database migrations
+- `pnpm prisma:studio` - Open Prisma Studio
+
+#### Additional Database Commands
+
+- Reset database: `npx prisma migrate reset`
+- Deploy migrations: `npx prisma migrate deploy`
+- Pull database schema: `npx prisma db pull`
 
 #### API Endpoints
 
-- GET /api/mainnet/contract/CDVQVKOY2YSXS2IC7KN6MNASSHPAO7UN2UR2ON4OI2SKMFJNVAMDX6DP/storage - Retrieve contract data
+| Method | Endpoint                                | Description             |
+| ------ | --------------------------------------- | ----------------------- |
+| GET    | `/api/${network}/contracts/:id/storage` | Get contract data by ID |
 
 `curl http://localhost:3000/api/{network}/contract/{contract_id}/storage`
 
