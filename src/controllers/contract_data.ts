@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "../../generated/prisma";
-
+import { prisma } from "../utils/connect";
 import { encodeCursor, decodeCursor } from "../helpers/cursor";
-
-const prisma = new PrismaClient();
 
 // Build query parameters string
 const buildQueryString = (params: Record<string, any>): string => {
